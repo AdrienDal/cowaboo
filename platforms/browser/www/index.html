@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width =device-width"/>
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"/>
+
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/my-app.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+
+    <title>Hello World</title>
+    <style>
+        table {
+            font-size: 10px;
+            width : 100%;
+        }
+        tr_allevent {
+
+        }
+        td input {
+            width : 90%;
+            margin : auto;
+        }
+        body {
+            margin : auto;
+            overflow : auto;
+        }
+
+        .showoff {
+            display : none;
+        }
+    </style>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="bower_components/framework7/dist/js/framework7.js"></script>
+    <script src="bower_components/framework7/dist/js/my-app.js"></script>
+</head>
+
+<body class="layout-gray" style="background-color : bisque; background-image:radial-gradient(white, bisque);">
+<div id="loader"
+     style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 1000px; width : 100%;display : none;">
+    <span style="position : absolute; left : 40%; top : 40%;"><img src="img/loader.gif"/></span>
+</div>
+<div id="qrGrand" onClick="closeQRGrand()"
+     style="z-index : 999;position : absolute; display : none; background-color: white;width : 100%; height : 1000px;">
+    <div class="card demo-card-header-pic">
+        <div valign="center" class="card-header color-white no-border">
+           <div style="width : 100%" id="qrGrandImage"></div>
+        </div>
+        <div class="card-content">
+            <div class="card-content-inner">
+                <table id="info_presence_event"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><img src="img/qr.png"> ATTENDANCE 2.0 <img src="img/qr.png"></div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <select id="user_key" style="width : 100%;"/>
+                <option value="SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y">Adrien - SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y</option>
+                <option value="SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM">Nelson - SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="getUser();" class="button button-round">Charger utilisateur</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-content">
+        <div class="card-content-inner">
+            <span id="user_info"></span><br/><span id="user_cash"></span>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="scan();" class="button  button-round">QR SCANNER</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements auxquels je participe</div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <table id="user_event_info">
+            </table>
+        </div>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">Tous les évènements disponibles</div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <table id="event_info">
+            </table>
+        </div>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements que j'organise</div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <table id="event_created_info"></table>
+        </div>
+        <div class="card-footer">
+            <table>
+                <tr>
+                    <td style="width : 100px;"><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
+                    <td style="width : 100px;"><input type="text" id="new_event_date" placeholder="date"/></td>
+                    <td style="width : 100px;"><a href="#" class="button button-raised color-blue" onClick="createNewEvent();">create</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
+<script type="text/javascript">
+    app.initialize();
+
+    user = "";
+    var refreshQR;
+
+    function getUser() {
+        var user_secretkey = $("#user_key").val();
+        $.get("http://groups.cowaboo.net/group5/public/api/user?secretKey=" + user_secretkey)
+            .fail(function () {
+                alert("secret_key invalide");
+            })
+            .done(function (reponse) {
+                $("#div_information").css('display','block');
+                user = reponse;
+                user.secretKey = user_secretkey;
+                $("#user_info").html("Utilisateur : " + user.email);
+                getUserEvent();
+                getAllEvent();
+                getCashUser();
+                $(".showoff").fadeIn();
+            })
+    }
+
+    function getCashUser() {
+        $.get("http://groups.cowaboo.net/group5/public/api/user/balance?public=" + user.publicAddress, function (reponse) {
+            $("#user_cash").html("Points de présence : " + reponse + " pts");
+        });
+    }
+
+    function testPresent(event) {
+        var inscrit = {};
+        inscrit.value = "non";
+        $.each(event.dictionary.entries, function (key, value) {
+            if (value.author == user.email) {
+                inscrit.hash = key;
+                if (value.value == "oui") {
+                    inscrit.value = "oui";
+                    return;
+                }
+            }
+        });
+        return inscrit;
+    }
+
+    function getInfoEvent(id_event) {
+        var event = "";
+        $.ajax({
+            url: "http://groups.cowaboo.net/group5/public/api/observatory?observatoryId=" + id_event,
+            async: false
+        }).done(function (reponse) {
+            event = reponse;
+        });
+        return event;
+    }
+
+    function getUserEvent() {
+        $("#user_event_info").html("");
+       // $("#user_event_info").html("<thead><td>évènements</td><td>date</td><td>présence</td><td>action</td></thead>");
+        $.each(user.observatories.subscribed, function (key, value) {
+            var event = getInfoEvent(key);
+            var inscrit = testPresent(event);
+            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>Présent : " + inscrit.value + "</td><td><a href='#' class='button  button-raised color-red'  onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</a></td></tr>");
+        })
+    }
+
+    function getCreatedEvent() {
+        $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
+            $("#event_info").html("");
+        //    $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+            $.each(reponse.tag_list.list, function (key, value) {
+                var event = getInfoEvent(key);
+                if ($.inArray(user.email, event.dictionary.member_list)) {
+                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
+                }
+            })
+        });
+    }
+
+    function getAllEvent() {
+        $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
+            $("#event_info").html("");
+            $("#event_created_info").html("");
+         //   $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+         //   $("#event_created_info").html("<thead><td>évènements</td><td>date</td><td>QRcode</td><td>Action</td></thead>");
+            $.each(reponse.tag_list.list, function (key, value) {
+                var event = getInfoEvent(key);
+                if ($.inArray(user.email, event.dictionary.member_list) < 0) {
+                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
+                }
+                if (event.dictionary.author == user.email) {
+                    $("#event_created_info").append("<tr id='tr_myevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><div  onClick='openQRGrand(\"" + event.dictionary.id + "\")' id='qrcode" + event.dictionary.id + "'></div></td><td><a href='#' class='button button-raised color-red' onClick='deleteEvent(\""+event.dictionary.id+"\")'>delete</a></td></tr>");
+                    qrcode(event.dictionary.id);
+                }
+            })
+        });
+    }
+
+    function subscribe(event_id) {
+        $("#loader").css('display', 'block');
+        $.post("http://groups.cowaboo.net/group5/public/api/user/observatories", {
+            "secretKey": user.secretKey,
+            "observatoryId": event_id
+        }).done(function (reponse) {
+            if (reponse) {
+                $("#tr_allevent_" + event_id).remove();
+                var event = getInfoEvent(event_id);
+                createPresence(event_id,"non");
+                $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>non</td><td><a href='#' class='button button-raised color-red' onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</a></td></tr>");
+            }
+
+            $("#loader").css('display', 'none');
+        });
+    }
+
+
+    function createPresence(event_id,value){
+        $.ajax({
+            url: "http://groups.cowaboo.net/group5/public/api/entry",
+            data: {"observatoryId": event_id, "secretKey": user.secretKey, "tags": user.email, "value": value},
+            method: "POST"
+        }).done(function (reponse) {
+            $("#tr_event_" + event_id + " td.inscrit").html("Présent : "+value);
+        });
+    }
+
+    function unsubscribe(event_id) {
+        $("#loader").css('display', 'block');
+        $.ajax({
+            url: "http://groups.cowaboo.net/group5/public/api/user/observatories?secretKey=" + user.secretKey,
+            data: {"observatoryId": event_id},
+            method: "DELETE"
+        }).done(function (reponse) {
+            if (reponse) {
+                $("#tr_event_" + event_id).remove();
+                var event = getInfoEvent(event_id);
+                $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
+            }
+            $("#loader").css('display', 'none');
+        });
+    }
+
+    function qrcode(event_id) {
+        $('#qrcode' + event_id).qrcode({width: 25, height: 25, text: event_id});
+    }
+
+    function openQRGrand(event_id) {
+        $('#qrGrand').css('display', 'block');
+        $('#qrGrandImage').html("");
+        $('#qrGrandImage').qrcode({width: window.width, text: event_id});
+        var event = getInfoEvent(event_id);
+        $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'><h1>"+event_id+"</h1></td></tr><td>Inscrit</td><td>Présent</td></tr>");
+        $.each(event.dictionary.entries, function (key, value) {
+            $("#info_presence_event").append("<tr><td>"+value.author+"</td><td>"+value.value+"</td></tr>");
+        });
+        refreshQR = setTimeout(function(){ openQRGrand(event_id) }, 5000);
+    }
+
+    function closeQRGrand() {
+        clearTimeout(refreshQR);
+        $('#qrGrand').css('display','none');
+    }
+
+    function createNewEvent(){
+        var event_id = $("#new_event_name").val();
+        var event_date = $("#new_event_date").val();
+        $("#loader").css('display', 'block');
+        $.post("http://groups.cowaboo.net/group5/public/api/observatory", {
+            "secretKey": user.secretKey,
+            "observatoryId": event_id
+        }).done(function (reponse) {
+            $.post("http://groups.cowaboo.net/group5/public/api/observatory/conf", {
+                "secretKey": user.secretKey,
+                "observatoryId": event_id,
+                "metadata name" : "date",
+                "metadata value" : event_date
+            }).done(function (reponse) {
+                var event = getInfoEvent(event_id);
+                createPresence(event_id,"non");
+                $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td>non</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
+                $("#event_created_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><div onClick='openQRGrand(\"" + event.dictionary.id + "\")' id='qrcode" + event.dictionary.id + "'></div></td><td><button onClick='deleteEvent(\""+event.dictionary.id+"\")'>delete</button></td></tr>");
+                qrcode(event.dictionary.id);
+                $("#loader").css('display', 'none');
+            });
+        });
+    }
+
+    function deleteEvent(event_id) {
+        $("#loader").css('display', 'block');
+        $.ajax({
+            url: "http://groups.cowaboo.net/group5/public/api/observatory?secretKey=" + user.secretKey,
+            data: {"observatoryId": event_id},
+            method: "DELETE"
+        }).done(function (reponse) {
+            if (reponse) {
+                $("#tr_event_" + event_id).remove();
+                $("#tr_allevent_" + event_id).remove();
+                $("#tr_myevent_" + event_id).remove();
+            }
+            $("#loader").css('display', 'none');
+        });
+    }
+
+    function scan() {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                alert("merci d'avoir confirmé votre présence !");
+                createPresence(result.text,"oui");
+            },
+            function (error) {
+                alert("Scanning failed: " + error);
+            },
+            {
+                preferFrontCamera : false, // iOS and Android
+                showFlipCameraButton : false, // iOS and Android
+                showTorchButton : false, // iOS and Android
+                torchOn: false, // Android, launch with the torch switched on (if available)
+                prompt : "Place a barcode inside the scan area", // Android
+                resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+                orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                disableAnimations : false, // iOS
+                disableSuccessBeep: false // iOS
+            }
+        );
+    }
+</script>
+</body>
+
+</html>
