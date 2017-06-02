@@ -331,6 +331,20 @@
     }
 
     function scan() {
+        cordova.plugins.diagnostic.getCameraAuthorizationStatus({
+            successCallback: function(status){
+                if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
+                    scanAccepted();
+                }
+            },
+            errorCallback: function(error){
+                console.error("The following error occurred: "+error);
+            },
+            externalStorage: false
+        });
+    }
+
+    function scanAccepted() {
         cordova.plugins.barcodeScanner.scan(
             function (result) {
                 alert("merci d'avoir confirmé votre présence !");
