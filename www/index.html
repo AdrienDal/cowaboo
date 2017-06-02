@@ -6,7 +6,7 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="msapplication-tap-highlight" content="no"/>
     <meta name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"/>
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, max-width=420px"/>
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"/>
@@ -18,69 +18,107 @@
             width : 400px;
         }
 
-        td {
-            max-width : 100px;
+        td input {
+            width : 115px;
         }
         body {
             max-width : 400px;
             margin : auto;
         }
+
+        .showoff {
+            display : none;
+        }
     </style>
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/my-app.css">
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="bower_components/framework7/dist/js/framework7.js"></script>
+    <script src="bower_components/framework7/dist/js/my-app.js"></script>
 </head>
 
 <body>
 <div id="loader"
-     style="background-color: #4d4d4d; z-index : 10;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
+     style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
     <span style="position : absolute; left : 40%; top : 40%;"><img src="img/loader.gif"/></span>
 </div>
 <div id="qrGrand" onClick="closeQRGrand()"
-     style="z-index : 10;position : absolute; display : none; background-color: white;width : 400px; height : 100%;">
-    <div id="qrGrandImage"></div>
-    <div>
-        <table id="info_presence_event"></table>
+     style="z-index : 999;position : absolute; display : none; background-color: white;width : 400px; height : 100%;">
+    <div class="card demo-card-header-pic">
+        <div valign="center" class="card-header color-white no-border">
+           <div style="width : 100%" id="qrGrandImage"></div>
+        </div>
+        <div class="card-content">
+            <div class="card-content-inner">
+                <table id="info_presence_event"></table>
+            </div>
+        </div>
     </div>
 </div>
-<div style="width : 100%; margin : auto; padding : 5px; padding-top : 50px;">
-    <h1><img src="img/qr.png"> ATTENDANCE 2.0 <img src="img/qr.png"></h1>
-    <br/>
-    <center>
-        <select id="user_key"/>
-            <option value="SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y" >Adrien</option>
-            <option value="SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM">Nelson</option>
-            <option value="" >Juliana</option>
-        </select>
-        <br/>
-        <button onClick="getUser();">Charger utilisateur</button>
-    </center>
-    <div id="div_information" style="display : none;">
 
-        <br/>
-        <div><span id="user_info"></span><br/><span id="user_cash"></span></div>
-        <button onClick="scan();">scanner</button>
-        <h3>mes évènements</h3>
-        <div>
+<div class="card">
+    <div class="card-header"><img src="img/qr.png"> ATTENDANCE 2.0 <img src="img/qr.png"></div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <select id="user_key" style="width : 100%;"/>
+                <option value="SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y">Adrien - SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y</option>
+                <option value="SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM">Nelson - SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="getUser();" class="button button-round">Charger utilisateur</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-content">
+        <div class="card-content-inner">
+            <span id="user_info"></span><br/><span id="user_cash"></span>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="scan();" class="button  button-round">QR SCANNER</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements auxquels je participe</div>
+    <div class="card-content">
+        <div class="card-content-inner">
             <table id="user_event_info">
             </table>
         </div>
-        <h3>liste de tous les évènements</h3>
-        <div>
-            <table id="event_info"></table>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">Tous les évènements disponibles</div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <table id="event_info">
+            </table>
         </div>
-        <h3>les évènements que j'organise</h3>
-        <div>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements que j'organise</div>
+    <div class="card-content">
+        <div class="card-content-inner">
             <table id="event_created_info"></table>
+        </div>
+        <div class="card-footer">
             <table>
                 <tr>
-                    <td><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
-                    <td colrows="2"><input type="text" id="new_event_date" placeholder="date"/></td>
-                    <td><button onClick="createNewEvent();">create</button></td>
+                    <td style="width : 100px;"><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
+                    <td style="width : 100px;"><input type="text" id="new_event_date" placeholder="date"/></td>
+                    <td style="width : 100px;"><button onClick="createNewEvent();">create</button></td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
@@ -104,12 +142,13 @@
                 getUserEvent();
                 getAllEvent();
                 getCashUser();
+                $(".showoff").fadeIn();
             })
     }
 
     function getCashUser() {
         $.get("http://groups.cowaboo.net/group5/public/api/user/balance?public=" + user.publicAddress, function (reponse) {
-            $("#user_cash").html("Cash : " + reponse + " $$$$$$$");
+            $("#user_cash").html("Points de présence : " + reponse + " pts");
         });
     }
 
