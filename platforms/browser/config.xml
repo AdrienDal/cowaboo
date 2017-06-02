@@ -9,12 +9,12 @@
     <feature name="BarcodeScanner">
         <param name="browser-package" value="BarcodeScanner" />
     </feature>
-    <name>Hello World</name>
+    <name>ATTENDANCE 2.0</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+       Application de timbrage
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+       Dream-team de cowabo
     </author>
     <content src="index.html" />
     <gap:config-file overwrite="true" parent="NSCameraUsageDescription" platform="ios">
@@ -29,4 +29,5 @@
     <allow-intent href="geo:*" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
+    <preference name="android-build-tool" value="gradle" />
 </widget>
