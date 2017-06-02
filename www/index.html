@@ -15,15 +15,20 @@
     <style>
         table {
             font-size: 10px;
-            width : 400px;
+            width : 390px;
         }
 
         td input {
-            width : 115px;
+            width : 90%;
+            margin : auto;
         }
         body {
             max-width : 400px;
             margin : auto;
+        }
+
+        thead td {
+            border-bottom: dashed 1px;
         }
 
         .showoff {
@@ -40,7 +45,7 @@
     <script src="bower_components/framework7/dist/js/my-app.js"></script>
 </head>
 
-<body>
+<body class="layout-gray" style="background-color : bisque; background-image:radial-gradient(white, bisque);">
 <div id="loader"
      style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
     <span style="position : absolute; left : 40%; top : 40%;"><img src="img/loader.gif"/></span>
@@ -179,18 +184,19 @@
     }
 
     function getUserEvent() {
-
-        $("#user_event_info").html("<thead><td>évènements</td><td>date</td><td>présence</td><td>action</td></thead>");
+        $("#user_event_info").html("");
+       // $("#user_event_info").html("<thead><td>évènements</td><td>date</td><td>présence</td><td>action</td></thead>");
         $.each(user.observatories.subscribed, function (key, value) {
             var event = getInfoEvent(key);
             var inscrit = testPresent(event);
-            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>" + inscrit.value + "</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
+            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>Présent : " + inscrit.value + "</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
         })
     }
 
     function getCreatedEvent() {
         $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
-            $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+            $("#event_info").html("");
+        //    $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list)) {
@@ -202,8 +208,10 @@
 
     function getAllEvent() {
         $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
-            $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
-            $("#event_created_info").html("<thead><td>évènements</td><td>date</td><td>QRcode</td><td>Action</td></thead>");
+            $("#event_info").html("");
+            $("#event_created_info").html("");
+         //   $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+         //   $("#event_created_info").html("<thead><td>évènements</td><td>date</td><td>QRcode</td><td>Action</td></thead>");
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list) < 0) {
@@ -268,9 +276,9 @@
     function openQRGrand(event_id) {
         $('#qrGrand').css('display', 'block');
         $('#qrGrandImage').html("");
-        $('#qrGrandImage').qrcode({width: 300, height: 300, text: event_id});
+        $('#qrGrandImage').qrcode({width: 350, height: 350, text: event_id});
         var event = getInfoEvent(event_id);
-        $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'>"+event_id+"</td></tr><td>Inscrit</td><td>Présent</td></tr>");
+        $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'><h1>"+event_id+"</h1></td></tr><td>Inscrit</td><td>Présent</td></tr>");
         $.each(event.dictionary.entries, function (key, value) {
             $("#info_presence_event").append("<tr><td>"+value.author+"</td><td>"+value.value+"</td></tr>");
         });
