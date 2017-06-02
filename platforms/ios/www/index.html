@@ -15,72 +15,116 @@
     <style>
         table {
             font-size: 10px;
-            width : 400px;
+            width : 490px;
         }
 
-        td {
-            max-width : 100px;
-        }
-        body {
-            max-width : 400px;
+        td input {
+            width : 90%;
             margin : auto;
         }
+        body {
+            max-width : 500px;
+            margin : auto;
+            height : 1300px;
+        }
+
+        thead td {
+            border-bottom: dashed 1px;
+        }
+
+        .showoff {
+            display : none;
+        }
     </style>
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/my-app.css">
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="bower_components/framework7/dist/js/framework7.js"></script>
+    <script src="bower_components/framework7/dist/js/my-app.js"></script>
 </head>
 
-<body>
+<body class="layout-gray" style="background-color : bisque; background-image:radial-gradient(white, bisque);">
 <div id="loader"
-     style="background-color: #4d4d4d; z-index : 10;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
+     style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
     <span style="position : absolute; left : 40%; top : 40%;"><img src="img/loader.gif"/></span>
 </div>
 <div id="qrGrand" onClick="closeQRGrand()"
-     style="z-index : 10;position : absolute; display : none; background-color: white;width : 400px; height : 100%;">
-    <div id="qrGrandImage"></div>
-    <div>
-        <table id="info_presence_event"></table>
+     style="z-index : 999;position : absolute; display : none; background-color: white;width : 400px; height : 100%;">
+    <div class="card demo-card-header-pic">
+        <div valign="center" class="card-header color-white no-border">
+           <div style="width : 100%" id="qrGrandImage"></div>
+        </div>
+        <div class="card-content">
+            <div class="card-content-inner">
+                <table id="info_presence_event"></table>
+            </div>
+        </div>
     </div>
 </div>
-<div style="width : 100%; margin : auto; padding : 5px; padding-top : 50px;">
-    <h1><img src="img/qr.png"> ATTENDANCE 2.0 <img src="img/qr.png"></h1>
-    <br/>
-    <center>
-        <select id="user_key"/>
-            <option value="SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y" >Adrien</option>
-            <option value="SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM">Nelson</option>
-            <option value="" >Juliana</option>
-        </select>
-        <br/>
-        <button onClick="getUser();">Charger utilisateur</button>
-    </center>
-    <div id="div_information" style="display : none;">
 
-        <br/>
-        <div><span id="user_info"></span><br/><span id="user_cash"></span></div>
-        <button onClick="scan();">scanner</button>
-        <h3>mes évènements</h3>
-        <div>
+<div class="card">
+    <div class="card-header"><img src="img/qr.png"> ATTENDANCE 2.0 <img src="img/qr.png"></div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <select id="user_key" style="width : 100%;"/>
+                <option value="SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y">Adrien - SBYTSJCLYQDCOUIJAZYS43OACYLIAWM6NXI4TUDKL4H4VAGR64YCMT2Y</option>
+                <option value="SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM">Nelson - SAUOT6MNQSHRRYFD5WSADZWQVBYXG7FRVTCAZEFFHJBBYVNVHVAFLVNM</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="getUser();" class="button button-round">Charger utilisateur</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-content">
+        <div class="card-content-inner">
+            <span id="user_info"></span><br/><span id="user_cash"></span>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="#"  style="width : 100%;" onClick="scan();" class="button  button-round">QR SCANNER</a>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements auxquels je participe</div>
+    <div class="card-content">
+        <div class="card-content-inner">
             <table id="user_event_info">
             </table>
         </div>
-        <h3>liste de tous les évènements</h3>
-        <div>
-            <table id="event_info"></table>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">Tous les évènements disponibles</div>
+    <div class="card-content">
+        <div class="card-content-inner">
+            <table id="event_info">
+            </table>
         </div>
-        <h3>les évènements que j'organise</h3>
-        <div>
+    </div>
+</div>
+<div class="card showoff">
+    <div class="card-header">les évènements que j'organise</div>
+    <div class="card-content">
+        <div class="card-content-inner">
             <table id="event_created_info"></table>
+        </div>
+        <div class="card-footer">
             <table>
                 <tr>
-                    <td><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
-                    <td colrows="2"><input type="text" id="new_event_date" placeholder="date"/></td>
-                    <td><button onClick="createNewEvent();">create</button></td>
+                    <td style="width : 100px;"><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
+                    <td style="width : 100px;"><input type="text" id="new_event_date" placeholder="date"/></td>
+                    <td style="width : 100px;"><button onClick="createNewEvent();">create</button></td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
@@ -104,12 +148,13 @@
                 getUserEvent();
                 getAllEvent();
                 getCashUser();
+                $(".showoff").fadeIn();
             })
     }
 
     function getCashUser() {
         $.get("http://groups.cowaboo.net/group5/public/api/user/balance?public=" + user.publicAddress, function (reponse) {
-            $("#user_cash").html("Cash : " + reponse + " $$$$$$$");
+            $("#user_cash").html("Points de présence : " + reponse + " pts");
         });
     }
 
@@ -140,18 +185,19 @@
     }
 
     function getUserEvent() {
-
-        $("#user_event_info").html("<thead><td>évènements</td><td>date</td><td>présence</td><td>action</td></thead>");
+        $("#user_event_info").html("");
+       // $("#user_event_info").html("<thead><td>évènements</td><td>date</td><td>présence</td><td>action</td></thead>");
         $.each(user.observatories.subscribed, function (key, value) {
             var event = getInfoEvent(key);
             var inscrit = testPresent(event);
-            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>" + inscrit.value + "</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
+            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>Présent : " + inscrit.value + "</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
         })
     }
 
     function getCreatedEvent() {
         $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
-            $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+            $("#event_info").html("");
+        //    $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list)) {
@@ -163,8 +209,10 @@
 
     function getAllEvent() {
         $.get("http://groups.cowaboo.net/group5/public/api/tags", function (reponse) {
-            $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
-            $("#event_created_info").html("<thead><td>évènements</td><td>date</td><td>QRcode</td><td>Action</td></thead>");
+            $("#event_info").html("");
+            $("#event_created_info").html("");
+         //   $("#event_info").html("<thead><td>évènements</td><td>date</td><td>action</td></thead>");
+         //   $("#event_created_info").html("<thead><td>évènements</td><td>date</td><td>QRcode</td><td>Action</td></thead>");
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list) < 0) {
@@ -202,7 +250,7 @@
             data: {"observatoryId": event_id, "secretKey": user.secretKey, "tags": user.email, "value": value},
             method: "POST"
         }).done(function (reponse) {
-            $("#tr_event_" + event_id + " td.inscrit").html(value);
+            $("#tr_event_" + event_id + " td.inscrit").html("Présent : "+value);
         });
     }
 
@@ -229,9 +277,9 @@
     function openQRGrand(event_id) {
         $('#qrGrand').css('display', 'block');
         $('#qrGrandImage').html("");
-        $('#qrGrandImage').qrcode({width: 300, height: 300, text: event_id});
+        $('#qrGrandImage').qrcode({width: 350, height: 350, text: event_id});
         var event = getInfoEvent(event_id);
-        $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'>"+event_id+"</td></tr><td>Inscrit</td><td>Présent</td></tr>");
+        $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'><h1>"+event_id+"</h1></td></tr><td>Inscrit</td><td>Présent</td></tr>");
         $.each(event.dictionary.entries, function (key, value) {
             $("#info_presence_event").append("<tr><td>"+value.author+"</td><td>"+value.value+"</td></tr>");
         });
