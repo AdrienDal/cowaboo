@@ -6,41 +6,41 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="msapplication-tap-highlight" content="no"/>
     <meta name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, max-width=500px"/>
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, height : 4000px; min-width=600px", max-width=600px"/>
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"/>
+
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.css">
+    <link rel="stylesheet" href="bower_components/framework7/dist/css/my-app.css">
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
+
     <title>Hello World</title>
     <style>
         table {
             font-size: 10px;
-            width : 490px;
+            width : 540px;
         }
+        tr_allevent {
 
+        }
         td input {
             width : 90%;
             margin : auto;
         }
         body {
-            max-width : 500px;
+            max-width : 600px;
             margin : auto;
-            height : 1300px;
-        }
-
-        thead td {
-            border-bottom: dashed 1px;
+            overflow : auto;
         }
 
         .showoff {
             display : none;
         }
     </style>
-    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.css">
-    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.css">
-    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.colors.css">
-    <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.material.css">
-    <link rel="stylesheet" href="bower_components/framework7/dist/css/my-app.css">
     <script type="text/javascript" src="cordova.js"></script>
     <script src="bower_components/framework7/dist/js/framework7.js"></script>
     <script src="bower_components/framework7/dist/js/my-app.js"></script>
@@ -48,11 +48,11 @@
 
 <body class="layout-gray" style="background-color : bisque; background-image:radial-gradient(white, bisque);">
 <div id="loader"
-     style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 100%; width : 400px;display : none;">
+     style="background-color: #4d4d4d; z-index : 999;position : absolute; opacity: 0.7; height : 1000px; width : 600px;display : none;">
     <span style="position : absolute; left : 40%; top : 40%;"><img src="img/loader.gif"/></span>
 </div>
 <div id="qrGrand" onClick="closeQRGrand()"
-     style="z-index : 999;position : absolute; display : none; background-color: white;width : 400px; height : 100%;">
+     style="z-index : 999;position : absolute; display : none; background-color: white;width : 600px; height : 1000px;">
     <div class="card demo-card-header-pic">
         <div valign="center" class="card-header color-white no-border">
            <div style="width : 100%" id="qrGrandImage"></div>
@@ -118,7 +118,7 @@
                 <tr>
                     <td style="width : 100px;"><input type="text" id="new_event_name" placeholder="nom évènement"/></td>
                     <td style="width : 100px;"><input type="text" id="new_event_date" placeholder="date"/></td>
-                    <td style="width : 100px;"><button onClick="createNewEvent();">create</button></td>
+                    <td style="width : 100px;"><a href="#" class="button button-raised color-blue" onClick="createNewEvent();">create</a></td>
                 </tr>
             </table>
         </div>
@@ -190,7 +190,7 @@
         $.each(user.observatories.subscribed, function (key, value) {
             var event = getInfoEvent(key);
             var inscrit = testPresent(event);
-            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>Présent : " + inscrit.value + "</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
+            $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>Présent : " + inscrit.value + "</td><td><a href='#' class='button  button-raised color-red'  onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</a></td></tr>");
         })
     }
 
@@ -201,7 +201,7 @@
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list)) {
-                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><button onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</button></td></tr>");
+                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
                 }
             })
         });
@@ -216,10 +216,10 @@
             $.each(reponse.tag_list.list, function (key, value) {
                 var event = getInfoEvent(key);
                 if ($.inArray(user.email, event.dictionary.member_list) < 0) {
-                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><button onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</button></td></tr>");
+                    $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
                 }
                 if (event.dictionary.author == user.email) {
-                    $("#event_created_info").append("<tr id='tr_myevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><div  onClick='openQRGrand(\"" + event.dictionary.id + "\")' id='qrcode" + event.dictionary.id + "'></div></td><td><button onClick='deleteEvent(\""+event.dictionary.id+"\")'>delete</button></td></tr>");
+                    $("#event_created_info").append("<tr id='tr_myevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><div  onClick='openQRGrand(\"" + event.dictionary.id + "\")' id='qrcode" + event.dictionary.id + "'></div></td><td><a href='#' class='button button-raised color-red' onClick='deleteEvent(\""+event.dictionary.id+"\")'>delete</a></td></tr>");
                     qrcode(event.dictionary.id);
                 }
             })
@@ -236,7 +236,7 @@
                 $("#tr_allevent_" + event_id).remove();
                 var event = getInfoEvent(event_id);
                 createPresence(event_id,"non");
-                $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>non</td><td><button onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</button></td></tr>");
+                $("#user_event_info").append("<tr id='tr_event_" + event.dictionary.id + "'><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td class='inscrit'>non</td><td><a href='#' class='button button-raised color-red' onClick='unsubscribe(\"" + event.dictionary.id + "\")'>unsubscribe</a></td></tr>");
             }
 
             $("#loader").css('display', 'none');
@@ -264,7 +264,7 @@
             if (reponse) {
                 $("#tr_event_" + event_id).remove();
                 var event = getInfoEvent(event_id);
-                $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><button onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</button></td></tr>");
+                $("#event_info").append("<tr id='tr_allevent_" + event.dictionary.id + "' ><td>" + event.dictionary.id + "</td><td>" + event.dictionary.conf.date + "</td><td><a href='#' class='button button-raised color-green' onClick='subscribe(\"" + event.dictionary.id + "\")'>subscribe</a></td></tr>");
             }
             $("#loader").css('display', 'none');
         });
@@ -277,7 +277,7 @@
     function openQRGrand(event_id) {
         $('#qrGrand').css('display', 'block');
         $('#qrGrandImage').html("");
-        $('#qrGrandImage').qrcode({width: 350, height: 350, text: event_id});
+        $('#qrGrandImage').qrcode({width: 550, height: 550, text: event_id});
         var event = getInfoEvent(event_id);
         $("#info_presence_event").html("<tr><td colspan='2' style='text-align : center;'><h1>"+event_id+"</h1></td></tr><td>Inscrit</td><td>Présent</td></tr>");
         $.each(event.dictionary.entries, function (key, value) {
